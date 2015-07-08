@@ -1,0 +1,12 @@
+<info>
+    {% for person in persons %}
+    <person id="{{ person.id }}">
+        <name>{{ person.name }}</name>
+        <tabel_id>{{ person.tabel_id }}</tabel_id>
+        <card>{{ person.card }}</card>
+        <hard_id>{{ person.hard_id }}</hard_id>
+        <payment_id>{{ person.payment_id }}</payment_id>
+        <status>{{ person.status }}</status>
+    </person>
+    {% endfor %}
+</info>

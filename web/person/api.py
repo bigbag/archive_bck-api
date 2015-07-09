@@ -5,7 +5,7 @@ from flask import (abort, Blueprint, request, render_template)
 
 from web.person.models import Person
 
-from web.helpers import api_helper, header_helper
+from web.helpers import api_helper, header_helper, logging_helper
 
 
 logger = logging.getLogger(__name__)
@@ -14,6 +14,7 @@ blueprint = Blueprint("api", __name__, url_prefix='/terminal')
 
 
 @blueprint.route("/firm_id/<int:firm_id>/persons/", methods=['GET'])
+@logging_helper.debug_request
 @header_helper.xml_headers
 @api_helper.login_required
 def getUsers(firm_id):
@@ -34,12 +35,14 @@ def getUsers(firm_id):
 
     persons = query.limit(limit).offset(offset).all()
     if not persons:
+        logger.debug('API: Not found persons')
         abort(404)
 
     return render_template("person/person.xml", persons=persons)
 
 
 @blueprint.route("/firm_id/<int:firm_id>/persons/", methods=['POST'])
+@logging_helper.debug_request
 @header_helper.xml_headers
 @api_helper.login_required
 def addUser(firm_id):
@@ -52,6 +55,7 @@ def addUser(firm_id):
 
     if len(search) != len(Person.MANDATORY_PARAMETERS):
         if not request.form.get(key):
+            logger.debug('PERSON: Required parameters missing')
             abort(405)
 
     person = Person.query.filter_by(firm_id=firm_id).\
@@ -61,6 +65,7 @@ def addUser(firm_id):
     if person:
         force = request.form.get('force')
         if not force:
+            logger.debug('PERSON: Duplicate person')
             abort(400)
 
         result = Person.delete(person)
@@ -89,16 +94,19 @@ def addUser(firm_id):
 
 
 @blueprint.route("/firm_id/<int:firm_id>/persons/", methods=['DELETE'])
+@logging_helper.debug_request
 @header_helper.xml_headers
 @api_helper.login_required
 def delUser(firm_id):
     hard_id = request.args.get('hard_id')
     if not hard_id:
+        logger.debug('PERSON: Not found hard_id in request parameters')
         abort(405)
 
     person = Person.query.filter_by(firm_id=firm_id).\
         filter_by(hard_id=hard_id).first()
     if not person:
+        logger.debug('PERSON: Not found person')
         abort(404)
 
     result = Person.delete(person)

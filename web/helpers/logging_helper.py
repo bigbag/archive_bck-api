@@ -1,5 +1,22 @@
 # -*- coding: utf-8 -*-
 import os
+import logging
+from functools import wraps
+
+from flask import request
+
+logger = logging.getLogger(__name__)
+
+
+def debug_request(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        logger.debug('REQUEST: Url %s' % request.url)
+        logger.debug('REQUEST: Handlers %s' % request.headers)
+        logger.debug('REQUEST: Forms parameters %s' % request.form)
+        logger.debug('REQUEST: Get parameters %s' % request.args)
+        return f(*args, **kwargs)
+    return decorated
 
 
 def setup_loggers(logs_settings, logs_enabled, logs_level, logs_dir,

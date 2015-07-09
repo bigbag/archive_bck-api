@@ -33,7 +33,7 @@ def access_check(request, firm_id):
 
     true_sign = hash_helper.get_api_sign(
         str(user.secret),
-        request.form)
+        dict(request.form.items() + request.args.items()))
 
     if not true_sign == headers['Sign']:
         logger.debug('API: No valid "Sign"')

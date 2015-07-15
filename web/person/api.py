@@ -17,7 +17,7 @@ blueprint = Blueprint("api", __name__, url_prefix='/terminal')
 @logging_helper.debug_request
 @header_helper.xml_headers
 @api_helper.login_required
-def getUsers(firm_id):
+def get_users(firm_id):
 
     search = {}
     for key in Person.SEARCH_KEY:
@@ -45,7 +45,7 @@ def getUsers(firm_id):
 @logging_helper.debug_request
 @header_helper.xml_headers
 @api_helper.login_required
-def addUser(firm_id):
+def add_user(firm_id):
     search = {}
     for key in Person.MANDATORY_PARAMETERS:
         search_value = request.form.get(key)
@@ -97,7 +97,7 @@ def addUser(firm_id):
 @logging_helper.debug_request
 @header_helper.xml_headers
 @api_helper.login_required
-def delUser(firm_id):
+def del_user(firm_id):
     hard_id = request.args.get('hard_id')
     if not hard_id:
         logger.debug('PERSON: Not found hard_id in request parameters')

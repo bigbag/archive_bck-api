@@ -38,7 +38,7 @@ def get_users(firm_id):
         logger.debug('API: Not found persons')
         abort(404)
 
-    return render_template("person/person.xml", persons=persons)
+    return render_template("person/person.xml", persons=persons).encode('cp1251')
 
 
 @blueprint.route("/firm_id/<int:firm_id>/persons/", methods=['POST'])
@@ -90,7 +90,7 @@ def add_user(firm_id):
     if not person.save():
         abort(500)
 
-    return render_template("person/person.xml", persons=(person,))
+    return render_template("person/person.xml", persons=(person,)).encode('cp1251')
 
 
 @blueprint.route("/firm_id/<int:firm_id>/persons/", methods=['DELETE'])
@@ -113,4 +113,4 @@ def del_user(firm_id):
     if not result:
         abort(500)
 
-    return render_template("person/success.xml")
+    return render_template("person/success.xml").encode('cp1251')

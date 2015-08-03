@@ -71,7 +71,8 @@ class PersonEvent(SurrogatePK, Model):
 
     person_id = ReferenceCol('person', nullable=False)
     person = relationship('Person', backref='person_event')
-    term_id = db.Column(db.Integer, nullable=False, index=True)
+    term_id = ReferenceCol('term', nullable=False)
+    term = relationship('Term', backref='person_event')
     event_id = ReferenceCol('event', nullable=False)
     event = relationship('Event', backref='person_event')
     firm_id = ReferenceCol('firm', nullable=False)

@@ -3,7 +3,7 @@ import logging
 
 from flask import (abort, Blueprint, request, render_template)
 
-from web.person.models import Person
+from web.person.models import Person, PersonEvent
 
 from web.helpers import api_helper, header_helper, logging_helper
 
@@ -114,3 +114,24 @@ def del_user(firm_id):
         abort(500)
 
     return render_template("person/success.xml").encode('cp1251')
+
+
+@blueprint.route("/firm_id/<int:firm_id>/persons/<int:person_id>/events/", methods=['GET'])
+@logging_helper.debug_request
+@header_helper.xml_headers
+@api_helper.login_required
+def get_person_event(firm_id, person_id):
+
+    person = Person.query.filter_by(firm_id=firm_id).\
+        filter_by(id=person_id).first()
+    if not person:
+        logger.debug('PERSON: Not found person')
+        abort(404)
+
+    person_events = PersonEvent.query.filter_by(person_id=person_id).all()
+    if not person:
+        logger.debug('PERSON: Not found person events')
+        abort(404)
+
+    return render_template("person/event.xml",
+                           person_events=person_events).encode('cp1251')

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<info>
+    <person id="{{ person_events[0].id }}" count="{{ person_events|length }}">
+        {% for person_event in person_events %}
+        <person_event id="{{ person_event.id }}" >
+            <event id="{{ person_event.event_id }}">{{ person_event.event.name }}</event>
+            <term id="{{ person_event.term_id }}" hard_id="{{ person_event.term.hard_id }}">
+                {{ person_event.term.name }}
+            </term>
+            <firm id="{{ person_event.firm_id }}">{{ person_event.firm.name }}</firm>
+            <timeout>{{ person_event.timeout }}</timeout>
+            <status>{{ person_event.status }}</status>
+        </person_event>
+        {% endfor %}
+    </person>
+</info>

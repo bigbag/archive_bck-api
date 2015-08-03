@@ -6,6 +6,7 @@ from web.event.models import Event
 from web.firm.models import Firm
 from web.person.models import Person, PersonEvent
 from web.user.models import User
+from web.term.models import Term
 
 try:
     from web.settings_local import Config

@@ -38,7 +38,13 @@ def get_users(firm_id):
         logger.debug('API: Not found persons')
         abort(404)
 
-    return render_template("person/person.xml", persons=persons).encode('cp1251')
+    person_events = None
+    if len(persons) == 1:
+        person_events = PersonEvent.query.filter_by(person_id=persons[0].id).all()
+
+    return render_template("person/person.xml",
+                           persons=persons,
+                           person_events=person_events).encode('cp1251')
 
 
 @blueprint.route("/firm_id/<int:firm_id>/persons/", methods=['POST'])

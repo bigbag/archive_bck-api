@@ -8,6 +8,9 @@
         <hard_id>{{ person.hard_id }}</hard_id>
         <payment_id>{{ person.payment_id }}</payment_id>
         <status>{{ person.status }}</status>
+        {% if person_events %}
+        <event count="{{ person_events|length }}" />
+        {% endif %}
     </person>
     {% endfor %}
 </info>

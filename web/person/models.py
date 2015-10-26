@@ -61,6 +61,21 @@ class Person(SurrogatePK, Model):
 
         return True
 
+    def to_dict(self):
+        result = {
+            'CardID': self.id,
+            'Name': self.name,
+            'TabelID': self.tabel_id,
+            'Status': bool(self.status),
+            'WalletStatus': bool(self.wallet_status),
+        }
+        person_wallet = {'Balance': 0}
+        if len(self.corp_wallet) > 0:
+            person_wallet = {'Balance': self.corp_wallet[0].balance}
+
+        result.update(person_wallet)
+        return result
+
 
 class PersonEvent(SurrogatePK, Model):
 

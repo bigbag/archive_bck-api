@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 import logging
 
-from flask import Flask, render_template
+from flask import Flask, jsonify
 
 from web import person
 from web.extensions import bcrypt, db
-from web.helpers.header_helper import xml_headers
+from web.helpers.header_helper import json_headers
 
 try:
     from web.settings_local import Config
@@ -38,11 +38,16 @@ def register_blueprints(app):
 
 
 def register_errorhandlers(app):
-    @xml_headers
+    @json_headers
     def render_error(error):
         # If a HTTPException, pull the `code` attribute; default to 500
         error_code = getattr(error, 'code', 500)
-        return render_template("errors/{0}.xml".format(error_code)), error_code
+        state = {
+            'IsSuccess': False,
+            'Code': error_code,
+            'Description': 'Error'
+        }
+        return jsonify(State=state), error_code
     for errcode in [401, 403, 404, 405, 500]:
         app.errorhandler(errcode)(render_error)
     return None

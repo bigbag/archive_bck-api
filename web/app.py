@@ -44,8 +44,7 @@ def register_errorhandlers(app):
         error_code = getattr(error, 'code', 500)
         state = {
             'IsSuccess': False,
-            'Code': error_code,
-            'Description': 'Error'
+            'Code': error_code
         }
         return jsonify(State=state), error_code
     for errcode in [401, 403, 404, 405, 500]:

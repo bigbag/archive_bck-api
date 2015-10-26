@@ -19,11 +19,9 @@ blueprint = Blueprint("api", __name__, url_prefix='/bck')
 @header_helper.json_headers
 @api_helper.login_required
 def get_card():
-    user = g.user
-
     limit = api_helper.get_request_count(request, Person.PER_PAGE)
     offset = api_helper.get_request_offset(request)
-    query = Person.query.filter_by(firm_id=user.firm)
+    query = Person.query.filter_by(firm_id=g.user.firm)
 
     try:
         search = json.loads(request.stream.read())

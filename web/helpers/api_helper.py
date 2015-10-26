@@ -21,7 +21,7 @@ def access_check():
         logger.debug('API: Not found user')
         return False
 
-    g.user = user
+    g.firms = (user.firm).split(',')
 
     app = (x for x in user.app.split(','))
     if current_app.config.get('API_PROJECT_NAME') not in app:

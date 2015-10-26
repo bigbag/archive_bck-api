@@ -4,6 +4,9 @@ utilities.
 """
 import logging
 
+from flask import json
+from sqlalchemy.exc import IntegrityError
+from sqlalchemy.ext import mutable
 from sqlalchemy.orm import relationship
 
 from .compat import basestring
@@ -14,6 +17,56 @@ Column = db.Column
 relationship = relationship
 
 logger = logging.getLogger('models')
+
+
+def _get_or_create(cls, **kwargs):
+    query = cls.query.filter_by(**kwargs)
+
+    instance = query.first()
+
+    if instance:
+        return instance, False
+    else:
+        db.session.begin(nested=True)
+        try:
+            instance = cls(**kwargs)
+
+            db.session.add(instance)
+            db.session.commit()
+
+            return instance, True
+        except IntegrityError:
+            db.session.rollback()
+            instance = query.one()
+
+            return instance, False
+
+
+class JsonEncodedDict(db.TypeDecorator):
+    impl = db.String
+
+    def process_bind_param(self, value, dialect):
+        return json.dumps(value)
+
+    def process_result_value(self, value, dialect):
+        return json.loads(value)
+
+mutable.MutableDict.associate_with(JsonEncodedDict)
+
+
+class Base(object):
+
+    def __init__(self, **kwargs):
+        super(Base, self).__init__()
+
+    def to_dict(self):
+        raise NotImplementedError
+
+    @classmethod
+    def factory(cls, **kwargs):
+        instance, created = _get_or_create(cls, **kwargs)
+
+        return instance
 
 
 class CRUDMixin(object):
@@ -52,7 +105,7 @@ class CRUDMixin(object):
         return commit and db.session.commit()
 
 
-class Model(CRUDMixin, db.Model):
+class Model(Base, CRUDMixin, db.Model):
     """Base model class that includes CRUD convenience methods."""
     __abstract__ = True
 

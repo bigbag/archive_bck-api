@@ -32,7 +32,7 @@ class Config(object):
     SQLALCHEMY_TRACK_MODIFICATIONS = True
 
     # API
-    API_PROJECT_NAME = 'person'
+    API_PROJECT_NAME = 'bck-api'
 
     # LOGGING
     LOG_ENABLE = True

@@ -1,27 +1,30 @@
 # Everything needed in production
 
 # Flask
-Flask==0.10.1
-Werkzeug==0.9.6
-Jinja2==2.7.3
-itsdangerous==0.24
+Flask
+Werkzeug
+Jinja2
+itsdangerous
 Flask-Script
 
 # Database
-Flask-SQLAlchemy==2.0
-SQLAlchemy==0.9.8
+Flask-SQLAlchemy
+SQLAlchemy
 mysql-python
 
 # Forms
-Flask-WTF==0.10.3
-WTForms==2.0.1
+Flask-WTF
+WTForms
 
 # Deployment
-gunicorn>=19.1.1
+gunicorn
 
 # Auth
-Flask-Login==0.2.11
-Flask-Bcrypt==0.6.0
+Flask-Login
+Flask-Bcrypt
 
 # World Timezone Definitions
 pytz
+
+# Libs
+flask-marshmallow

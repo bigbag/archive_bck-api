@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import logging
-from flask import abort, current_app, request
+from flask import abort, g, current_app, request
 from functools import wraps
 
 from web.user.models import User
@@ -10,7 +10,7 @@ from web.helpers import hash_helper
 logger = logging.getLogger(__name__)
 
 
-def access_check(request, firm_id):
+def access_check():
     headers = request.headers
     if 'Key' not in headers or 'Sign' not in headers:
         logger.debug('API: Not found "Key" or "Sign" in request headers')
@@ -21,10 +21,7 @@ def access_check(request, firm_id):
         logger.debug('API: Not found user')
         return False
 
-    firms = (int(x) for x in user.firm.split(','))
-    if firm_id not in firms:
-        logger.debug('API: No access to the selected firm')
-        return False
+    g.user = user
 
     app = (x for x in user.app.split(','))
     if current_app.config.get('API_PROJECT_NAME') not in app:
@@ -46,11 +43,7 @@ def access_check(request, firm_id):
 def login_required(f):
     @wraps(f)
     def decorated(*args, **kwargs):
-        firm_id = kwargs.get('firm_id')
-        if not firm_id:
-            logger.debug('API: No found firm_id')
-            abort(405)
-        if not access_check(request, firm_id):
+        if not access_check():
             abort(403)
         return f(*args, **kwargs)
     return decorated

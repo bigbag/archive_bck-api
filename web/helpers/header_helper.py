@@ -28,7 +28,7 @@ def xml_headers(f):
 
 def json_headers(f):
     @wraps(f)
-    @add_response_headers({'Content-Type': 'application/json'})
+    @add_response_headers({'Content-Type': 'application/json; charset=utf8'})
     def decorated_function(*args, **kwargs):
         return f(*args, **kwargs)
     return decorated_function

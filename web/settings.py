@@ -29,6 +29,7 @@ class Config(object):
     SQLALCHEMY_DATABASE_URI = 'mysql://user:pass@localhost/web?charset=utf8'
     SQLALCHEMY_ECHO = False
     SQLALCHEMY_RECORD_QUERIES = True
+    SQLALCHEMY_TRACK_MODIFICATIONS = True
 
     # API
     API_PROJECT_NAME = 'person'

@@ -19,11 +19,14 @@ class Config(object):
     # CSRF & SECRET_KEY
     BCRYPT_LOG_ROUNDS = 13
 
+    API_REQUIRED_PASSWORD = True
+
     # DEBUG
     DEBUG = False
     ASSETS_DEBUG = False
     DEBUG_TB_ENABLED = False
     DEBUG_TB_INTERCEPT_REDIRECTS = False
+    DEBUG_HTTP_REQUEST = True
 
     # DATABASES
     SQLALCHEMY_DATABASE_URI = 'mysql://user:pass@localhost/web?charset=utf8'

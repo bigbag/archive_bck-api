@@ -40,15 +40,6 @@ def access_check():
     return True
 
 
-def login_required(f):
-    @wraps(f)
-    def decorated(*args, **kwargs):
-        if not access_check():
-            abort(403)
-        return f(*args, **kwargs)
-    return decorated
-
-
 def get_request_count(request, max):
     limit = request.args.get('count', max)
     try:

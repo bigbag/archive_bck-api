@@ -2,11 +2,11 @@
 import json
 import logging
 
-from flask import (abort, Blueprint, g, jsonify, request, render_template)
+from flask import (abort, Blueprint, g, jsonify, request)
 
-from web.person.models import Person, PersonEvent
+from web.person.models import Person
 
-from web.helpers import api_helper, header_helper, logging_helper
+from web.helpers import api_helper, header_helper
 
 
 logger = logging.getLogger(__name__)
@@ -29,9 +29,7 @@ def get_parameter():
 
 
 @blueprint.route("/GetCard/", methods=['POST'])
-@logging_helper.debug_request
 @header_helper.json_headers
-@api_helper.login_required
 def get_persons():
     limit = api_helper.get_request_count(request, Person.PER_PAGE)
     offset = api_helper.get_request_offset(request)
@@ -60,10 +58,14 @@ def get_persons():
     return jsonify(result)
 
 
-@blueprint.route("/DelCard/", methods=['POST'])
-@logging_helper.debug_request
+@blueprint.route("/UpdCard/", methods=['POST'])
 @header_helper.json_headers
-@api_helper.login_required
+def create_or_update_person():
+    pass
+
+
+@blueprint.route("/DelCard/", methods=['POST'])
+@header_helper.json_headers
 def del_person():
 
     parameter = get_parameter()

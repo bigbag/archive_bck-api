@@ -6,6 +6,7 @@ from flask import Flask, jsonify
 from web import person
 from web.extensions import bcrypt, db
 from web.helpers.header_helper import json_headers
+from web.middleware import AppMiddleware
 
 try:
     from web.settings_local import Config
@@ -21,6 +22,7 @@ def create_app(config_object=Config):
     register_extensions(app)
     register_blueprints(app)
     register_errorhandlers(app)
+    AppMiddleware(app)
     return app
 
 

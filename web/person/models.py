@@ -19,12 +19,6 @@ class Person(SurrogatePK, Model):
     TYPE_TIMEOUT = 0
     TYPE_WALLET = 1
 
-    SEARCH_KEY = ('name', 'tabel_id', 'card', 'hard_id')
-
-    MANDATORY_PARAMETERS = ('name', 'tabel_id', 'hard_id')
-
-    OPTIONAL_PARAMETERS = ('payment_id', 'card')
-
     name = db.Column(db.Text, nullable=False)
     tabel_id = db.Column(db.String(150))
     birthday = db.Column(db.Date())
@@ -63,7 +57,8 @@ class Person(SurrogatePK, Model):
 
     def to_dict(self):
         result = {
-            'CardID': self.id,
+            'ID': self.id,
+            'CardID': self.card,
             'Name': self.name,
             'TabelID': self.tabel_id,
             'Status': bool(self.status),

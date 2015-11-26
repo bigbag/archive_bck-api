@@ -5,7 +5,7 @@ from flask import Flask, jsonify
 
 from web import person
 from web.extensions import bcrypt, db
-from web.helpers.header_helper import json_headers
+from web.helpers.header_helper import add_response_headers, json_headers
 from web.middleware import AppMiddleware
 
 try:
@@ -42,13 +42,16 @@ def register_blueprints(app):
 def register_errorhandlers(app):
     @json_headers
     def render_error(error):
-        # If a HTTPException, pull the `code` attribute; default to 500
         error_code = getattr(error, 'code', 500)
+        error_name = getattr(error, 'name', 'Not Found')
         state = {
             'IsSuccess': False,
-            'Code': error_code
+            'Code': error_code,
+            'Description': error_name
         }
-        return jsonify(State=state), error_code
+
+        return jsonify(State=state), 200
+
     for errcode in [401, 403, 404, 405, 500]:
         app.errorhandler(errcode)(render_error)
     return None

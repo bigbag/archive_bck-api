@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 blueprint = Blueprint("api", __name__, url_prefix='/bck')
 
 
-def get_parameterss():
+def get_parameters():
     try:
         search = json.loads(request.stream.read())
     except ValueError:
@@ -52,7 +52,7 @@ def get_persons():
     offset = api_helper.get_request_offset(request)
     query = Person.query.filter(Person.firm_id.in_(g.firms))
 
-    parameters = get_parameterss()
+    parameters = get_parameters()
     if parameters:
         cards_id = parameters.get('CardId')
         if cards_id:
@@ -77,7 +77,7 @@ def create_or_update_person():
 @header_helper.json_headers
 def del_person():
 
-    parameters = get_parameterss()
+    parameters = get_parameters()
     if not parameters:
         abort(405)
 
@@ -103,7 +103,7 @@ def del_person():
 @header_helper.json_headers
 def update_wallet_balance():
 
-    parameters = get_parameterss()
+    parameters = get_parameters()
     if not parameters:
         abort(405)
 
@@ -141,7 +141,7 @@ def update_wallet_balance():
 @header_helper.json_headers
 def get_transaction_log():
 
-    parameters = get_parameterss()
+    parameters = get_parameters()
     if not parameters:
         abort(405)
 

@@ -157,7 +157,7 @@ def get_transaction_log():
         logger.debug(e)
         abort(405)
 
-    if (date_begin and date_end) and (date_begin < date_end):
+    if (date_begin and date_end) and (date_begin > date_end):
         abort(405)
 
     if not date_begin or not date_end:

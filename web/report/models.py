@@ -50,3 +50,11 @@ class Report(SurrogatePK, Model):
         }
 
         return result
+
+    @staticmethod
+    def get_by_current_date(interval, firms_id_list):
+        query = Report.query.filter(Report.term_firm_id.in_(firms_id_list))
+        query = query.filter(
+            Report.creation_date.between(interval[0], interval[1]))
+
+        return query.all()

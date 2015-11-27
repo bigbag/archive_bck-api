@@ -168,11 +168,8 @@ def get_transaction_log():
             date_helper.to_datetime(date_begin),
             date_helper.to_datetime(date_end)
         )
-    query = Report.query.filter(Report.term_firm_id.in_(g.firms))
-    query = query.filter(
-        Report.creation_date.between(interval[0], interval[1]))
 
-    reports = query.all()
+    reports = Report.get_by_current_date(interval, g.firms)
     result = [report.to_dict() for report in reports]
 
     return get_success_result(result)

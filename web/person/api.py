@@ -61,7 +61,7 @@ def get_persons():
     persons = query.limit(limit).offset(offset).all()
     if not persons:
         logger.debug('API: Not found persons')
-        return get_success_result({})
+        return get_success_result([])
 
     data = [person.to_dict() for person in persons]
     return get_success_result(data)

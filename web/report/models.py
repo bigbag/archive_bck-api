@@ -43,12 +43,14 @@ class Report(SurrogatePK, Model):
     def to_dict(self):
         result = {
             'TranId': self.id,
-            'CardID': self.person.card,
+            'CardID': 'N/A',
             'Date': date_helper.to_unixtime(self.creation_date),
             'Value': self.amount,
-            'DeviceId': self.term.hard_id
+            'DeviceId': self.term.hard_id if self.term else 'N/A'
         }
 
+        if self.person:
+            result['CardID'] = self.person.card
         return result
 
     @staticmethod

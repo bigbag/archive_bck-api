@@ -157,6 +157,9 @@ def get_transaction_log():
         logger.debug(e)
         abort(405)
 
+    if (date_begin and date_end) and (date_begin < date_end):
+        abort(405)
+
     if not date_begin or not date_end:
         current_date = date_helper.get_current_utc()
         interval = date_helper.get_date_interval(current_date, 'month')

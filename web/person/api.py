@@ -25,7 +25,7 @@ def get_parameters():
         if parameters:
             return parameters
 
-    logger.debug('API: Not found Parameter in request parameterss')
+    logger.debug('API: Not found Parameter in request parameters')
     return
 
 
@@ -83,7 +83,7 @@ def del_person():
 
     card_id = parameters.get('CardId')
     if not card_id:
-        logger.debug('API: Not found CardId in request parameterss')
+        logger.debug('API: Not found CardId in request parameters')
         abort(405)
 
     person = Person.query.filter(Person.firm_id.in_(g.firms)).\

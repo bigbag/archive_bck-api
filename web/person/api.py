@@ -16,6 +16,7 @@ blueprint = Blueprint("api", __name__, url_prefix='/bck')
 
 
 def get_parameters():
+
     try:
         search = json.loads(request.stream.read())
     except ValueError:
@@ -30,6 +31,7 @@ def get_parameters():
 
 
 def get_success_result(data=None):
+
     result = {
         'State': {
             'IsSuccess': True,
@@ -48,13 +50,14 @@ def get_success_result(data=None):
 @blueprint.route("/GetCard/", methods=['POST'])
 @header_helper.json_headers
 def get_persons():
+
     limit = api_helper.get_request_count(request, Person.PER_PAGE)
     offset = api_helper.get_request_offset(request)
     query = Person.query.filter(Person.firm_id.in_(g.firms))
 
     parameters = get_parameters()
     if parameters:
-        cards_id = parameters.get('CardId')
+        cards_id = parameters.get('CardID')
         if cards_id:
             query = query.filter(Person.id.in_(cards_id))
 
@@ -70,7 +73,55 @@ def get_persons():
 @blueprint.route("/UpdCard/", methods=['POST'])
 @header_helper.json_headers
 def create_or_update_person():
-    pass
+
+    parameters = get_parameters()
+    if not parameters:
+        abort(405)
+
+    result = []
+    for info in parameters:
+        card_id = info.get('CardID')
+        name = info.get('Name')
+        tabel_id = info.get('TabelID')
+        hard_id = info.get('HardID')
+        payment_id = info.get('PaymentID')
+
+        if not card_id or not name or not hard_id:
+            logger.debug('API: Not valid parameters')
+            continue
+
+        query = Person.query.filter(Person.firm_id.in_(g.firms))
+
+        person = query.filter_by(card=card_id).first()
+        person_by_hard_id = query.filter_by(hard_id=hard_id).first()
+        person_by_payment_id = query.filter_by(payment_id=payment_id).first()
+
+        if person:
+            if person_by_hard_id and person.id != person_by_hard_id.id:
+                logger.debug('API: Not a unique value hard_id')
+                continue
+
+            if person_by_payment_id and person.id != person_by_payment_id.id:
+                logger.debug('API: Not a unique value payment_id')
+                continue
+        else:
+            person = Person()
+
+        person.card_id = card_id
+        person.name = name
+        person.hard_id = hard_id
+        person.firm_id = g.firms[0]
+
+        if payment_id:
+            person.payment_id = payment_id
+
+        if tabel_id:
+            person.tabel_id = tabel_id
+        person.save()
+
+        result.append(info)
+
+    return get_success_result(result)
 
 
 @blueprint.route("/DelCard/", methods=['POST'])
@@ -81,9 +132,9 @@ def del_person():
     if not parameters:
         abort(405)
 
-    card_id = parameters.get('CardId')
+    card_id = parameters.get('CardID')
     if not card_id:
-        logger.debug('API: Not found CardId in request parameters')
+        logger.debug('API: Not found CardID in request parameters')
         abort(405)
 
     person = Person.query.filter(Person.firm_id.in_(g.firms)).\
@@ -110,7 +161,7 @@ def update_wallet_balance():
     result = []
     for info in parameters:
         try:
-            card = int(info.get('CardId'))
+            card = int(info.get('CardID'))
             balance = int(info.get('Balance'))
         except Exception as e:
             logger.debug('API: Not valid parameters')

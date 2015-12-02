@@ -49,7 +49,7 @@ def to_datetime(timestamp):
 
 
 def to_unixtime(date):
-    return int(time.mktime(date.timetuple()))
+    return int(calendar.timegm(date.timetuple()))
 
 
 def get_date_interval(timestamp, period='day', tz='UTC'):

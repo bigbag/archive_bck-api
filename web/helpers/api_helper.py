@@ -40,13 +40,13 @@ def access_check():
     return True
 
 
-def get_request_count(request, max):
-    limit = request.args.get('count', max)
+def get_request_count(request, default, max=None):
+    limit = request.args.get('count', default)
     try:
         limit = int(limit)
     except:
         abort(405)
-    if limit > max:
+    if max and limit > max:
         limit = max
 
     return limit

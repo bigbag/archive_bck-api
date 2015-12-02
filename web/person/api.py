@@ -51,7 +51,9 @@ def get_success_result(data=None):
 @header_helper.json_headers
 def get_persons():
 
-    limit = api_helper.get_request_count(request, Person.PER_PAGE)
+    limit = api_helper.get_request_count(
+        request, Person.PER_PAGE, Person.MAX_PER_PAGE)
+
     offset = api_helper.get_request_offset(request)
     query = Person.query.filter(Person.firm_id.in_(g.firms))
 
@@ -62,6 +64,7 @@ def get_persons():
             query = query.filter(Person.id.in_(cards_id))
 
     persons = query.limit(limit).offset(offset).all()
+
     if not persons:
         logger.debug('API: Not found persons')
         return get_success_result([])

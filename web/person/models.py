@@ -12,6 +12,7 @@ class Person(SurrogatePK, Model):
     __tablename__ = 'person'
 
     PER_PAGE = 50
+    MAX_PER_PAGE = 1000
 
     STATUS_VALID = 1
     STATUS_BANNED = 0

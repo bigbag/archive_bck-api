@@ -44,8 +44,8 @@ def convert_date_from_utc(date, tz, input, output):
     return from_utc(conv, tz).strftime(output)
 
 
-def to_datetime(timestamp):
-    return datetime.fromtimestamp(timestamp)
+def to_datetime(timestamp, tz='UTC'):
+    return datetime.fromtimestamp(timestamp, tz=pytz.timezone(tz))
 
 
 def to_unixtime(date):
@@ -53,7 +53,7 @@ def to_unixtime(date):
 
 
 def get_date_interval(timestamp, period='day', tz='UTC'):
-    search_date = datetime.fromtimestamp(timestamp)
+    search_date = datetime.fromtimestamp(timestamp, tz=pytz.timezone(tz))
 
     start = datetime(search_date.year,
                      search_date.month,
